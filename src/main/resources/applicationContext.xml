@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        https://docs.spring.io/spring-javaconfig/docs/1.0.0.M4/reference/html/ch02s02.html
+
+        * Using this method requires the Default Constructor for JobDAOImpl be available
+
+        * id="JobDAO_Bean" is how the bean is referenced in the Spring Application Context
+         This reference is used in "JobApp" to obtain a reference to this bean.
+
+        * class="com.github.pknall.curdplayground.JobDAOImpl" is the bean being referenced
+
+        * <property name="dataSource" is the name of the variable this bean operates on
+         Specifically, the "getDataSource()" and "setDataSource()" methods are derived from this assignment
+
+        * <property ref="dataSource" is a reference to another bean that this bean depends on
+
+        -->
+    <bean id="JobDAO_Bean" class="com.github.pknall.crudplayground.JobDAOImpl">
+        <property name="dataSource_Bean" ref="dataSource" />
+    </bean>
+
+    <!-- https://stackoverflow.com/questions/20086854/spring-to-read-from-my-system-environment-variables -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="#{systemEnvironment.APP_DB_DRIVER}" />
+        <property name="url" value="jdbc:mysql://#{systemEnvironment.APP_DB_HOST}:#{systemEnvironment.APP_DB_PORT}/#{systemEnvironment.APP_DB_NAME}" />
+        <property name="username" value="#{systemEnvironment.APP_DB_USER}" />
+        <property name="password" value="#{systemEnvironment.APP_DB_PASS}" />
+    </bean>
+</beans>
